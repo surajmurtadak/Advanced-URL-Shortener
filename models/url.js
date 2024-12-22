@@ -18,6 +18,8 @@ const urlSchema = new mongoose.Schema(
     visitHistory: [
       {
         timestamps: { type: Date },
+        osName: { type: String },
+        MACAddress: { type: String },
       },
     ],
   },
