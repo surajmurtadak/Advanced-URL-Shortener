@@ -17,9 +17,11 @@ const urlSchema = new mongoose.Schema(
     },
     visitHistory: [
       {
-        timestamps: { type: Date },
-        osName: { type: String },
-        MACAddress: { type: String },
+        timestamp: { type: Date },
+        OSDetail: { type: String },
+        IP: { type: String },
+        DeviceType: { type: String },
+        UserAgent: { type: String },
       },
     ],
   },

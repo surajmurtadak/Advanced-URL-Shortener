@@ -1,37 +1,24 @@
-const os = require('os');
 
-const getPrimaryMACAddress = () => {
-  const networkInterfaces = os.networkInterfaces();
-  for (const interfaceName in networkInterfaces) {
-      for (const details of networkInterfaces[interfaceName]) {
-          if (!details.internal && details.mac !== '00:00:00:00:00:00') {
-              return details.mac;
-          }
-      }
-  }
-  return null;
-}
+const getUserDetails = (req) => {
+  const userAgent = req.headers['user-agent'];
+  const IP = req.ip;
 
-const getOS = () => {
+    const osMatch = userAgent.match(/\(([^)]+)\)/);
+    const osDetail = osMatch ? osMatch[1] : 'Unknown';
 
-  const osType = os.type();
-  const osPlatform = os.platform();
-  const osRelease = os.release();
+    // Device Type Detection (simple heuristic)
+    const isMobile = /Mobile|Android/i.test(userAgent);
+    const isTablet = /Tablet|iPad/i.test(userAgent);
+    const deviceType = isMobile ? 'Mobile' : isTablet ? 'Tablet' : 'Desktop';
 
-  if (osType === 'Linux' && osRelease.includes('android')) {
-    return 'Android';
-  } else if (osType === 'Darwin' && osRelease.includes('iOS')) {
-    return 'iOS';
-  } else if (osType === 'Darwin') {
-    return 'macOS';
-  } else if (osType === 'Windows_NT') {
-    return 'Windows';
-  } else {
-    return osPlatform;
-  }
-}
+    return {
+      osDetail,
+      deviceType,
+      userAgent,
+      IP,
+    };
+};
 
 module.exports = {
-  getPrimaryMACAddress,
-  getOS,
+  getUserDetails,
 }
