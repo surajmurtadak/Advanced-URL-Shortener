@@ -1,8 +1,8 @@
 const URL = require('../models/url');
+const { redirect } = require('./url');
 
 function clickByDateData(analytics) {
   const result = analytics.reduce((acc, curr) => {
-    console.log("Timestamp: ",acc ," >< ", curr);
       const date = curr.timestamp.toISOString().split('T')[0];
       acc[date] = (acc[date] || 0) + 1;
       return acc;
@@ -73,7 +73,7 @@ async function getAnalytics(req, res) {
   const { shortUrl } = req.params;
   const url = await URL.findOne({ shortUrl });
   if (!url) {
-    return res.status(400).json({ error: 'URL not found' });
+    return res.status(400).json({ error: 'URL not found!' });
   }
   let analytics = url.visitHistory;
   console.log("Analytics by date: ", clickByDateData(analytics));
@@ -117,7 +117,32 @@ async function getAnalyticsByTopic(req, res) {
   })
 }
 
+async function getOverallAnalytics(req, res) {
+  const urls = await URL.find({});
+  console.log(' :: ',urls);
+  if (!urls) {
+    return res.status(400).json({error: "No0 URL found.."});
+  }
+  const totalUrls = urls.length;
+  const analytics = urls.map(url => url.visitHistory).flat();
+  const totalClicks = analytics.length;
+  const uniqueUsers = new Set(analytics.map(a => a.IP)).size;
+  const clicksByDate = clickByDateData(analytics);
+  const osType = osTypeData(analytics);
+  const deviceType = deviceTypeData(analytics);
+
+  return res.json({
+    totalUrls,
+    totalClicks,
+    uniqueUsers,
+    clicksByDate,
+    osType,
+    deviceType,
+  })
+}
+
 module.exports = {
   getAnalytics,
   getAnalyticsByTopic,
+  getOverallAnalytics,
 }
