@@ -1,9 +1,7 @@
 
 const getUserDetails = (req) => {
   const userAgent = req.headers['user-agent'];
-  const IP = req.ip;
-  const clientIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  console.log("::> Client IP <::> ",clientIP," <::> ",typeof clientIP," <::> ", IP, " <::");
+  const IP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     const osMatch = userAgent.match(/\(([^)]+)\)/);
     const osDetail = osMatch ? osMatch[1] : 'Unknown';
 
