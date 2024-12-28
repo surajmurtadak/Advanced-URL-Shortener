@@ -4,7 +4,7 @@ const { getUserDetails } = require('../services/urlServices');
 
 async function urlShortenerHandler(req, res) {
   try {
-    const { longUrl, customAlias } = req.body;
+    const { longUrl, customAlias, topic } = req.body;
     if (!longUrl) {
       return res.status(400).json({ error: 'longUrl is required' });
     }
@@ -18,6 +18,7 @@ async function urlShortenerHandler(req, res) {
     const newUrl = await URL.create({
       shortUrl,
       longUrl,
+      topic,
       visitHistory: []
     });
   
