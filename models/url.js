@@ -15,6 +15,9 @@ const urlSchema = new mongoose.Schema(
     topic: {
       type: String,
     },
+    userId: {
+      type: String,
+    },
     visitHistory: [
       {
         timestamp: { type: Date },

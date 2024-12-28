@@ -11,16 +11,13 @@ passport.use(new GoogleStrategy({
   async (accessToken, refreshToken, profile, done) => {
     try {
       let user = await User.findOne({ googleId: profile.id });
-      // console.log(">> profile >> ", profile);
       if (!user) {
-        // console.log("NotPresent");
         user = new User({
           googleId: profile.id,
           name: profile.displayName,
           email: profile.emails[0].value,
           picture: profile.photos[0].value
         });
-        // console.log(">> user >> ", user);
         await user.save();
       }
       return done(null, user);

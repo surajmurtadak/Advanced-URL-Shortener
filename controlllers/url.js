@@ -5,6 +5,7 @@ const { getUserDetails } = require('../services/urlServices');
 async function urlShortenerHandler(req, res) {
   try {
     const { longUrl, customAlias, topic } = req.body;
+    console.log(req.user?._id);
     if (!longUrl) {
       return res.status(400).json({ error: 'longUrl is required' });
     }
@@ -14,11 +15,12 @@ async function urlShortenerHandler(req, res) {
         return res.status(400).json({ error: 'customAlias is already taken' });
       }
     }
-    const shortUrl = customAlias || shortid();
+    const shortUrl = (process.env.BASE_URL || '<Base_URL>' ) + (customAlias || shortid());
     const newUrl = await URL.create({
       shortUrl,
       longUrl,
       topic,
+      userId: req.user?._id,
       visitHistory: []
     });
   
@@ -33,7 +35,8 @@ async function urlShortenerHandler(req, res) {
 }
 
 async function redirect (req, res) {
-  const { shortUrl } = req.params;
+  let { shortUrl } = req.params;
+  shortUrl = process.env.BASE_URL + shortUrl;
   const { osDetail, deviceType, userAgent, IP } = getUserDetails(req);
   console.log("OS: ", osDetail, "IP: ", IP, "Device Type: ", deviceType , "User Agent: ", userAgent);
   const newUrl = await URL.findOneAndUpdate({ shortUrl}, { $push: { visitHistory: { timestamp: Date.now(), OSDetail: osDetail, IP: IP, DeviceType: deviceType , UserAgent: userAgent } } });

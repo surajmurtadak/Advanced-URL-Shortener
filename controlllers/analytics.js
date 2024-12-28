@@ -71,54 +71,57 @@ function deviceTypeData(analytics) {
 
 async function getAnalytics(req, res) {
   const { shortUrl } = req.params;
-  const url = await URL.findOne({ shortUrl });
+  const userId = req.user?._id;
+  const url = await URL.findOne({ shortUrl, userId });
   if (!url) {
     return res.status(400).json({ error: 'URL not found!' });
   }
   let analytics = url.visitHistory;
   console.log("Analytics by date: ", clickByDateData(analytics));
   const clicksByDate = clickByDateData(analytics);
-  const uniqueClicks = new Set(analytics.map(a => a.IP)).size;
+  const uniqueUsers = new Set(analytics.map(a => a.IP)).size;
   const osType = osTypeData(analytics);
   const deviceType = deviceTypeData(analytics);
   return res.json({
     totalClick: analytics.length,
-    uniqueClicks: uniqueClicks,
-    clicksByDate: clicksByDate,
-    osType: osType,
-    deviceType: deviceType,
+    uniqueUsers,
+    clicksByDate,
+    osType,
+    deviceType,
 
   });
 }
 
 async function getAnalyticsByTopic(req, res) {
   const { topic } = req.params;
-  const urls = await URL.find({ topic});
+  const userId = req.user?._id;
+  const urls = await URL.find({ topic, userId });
   if (!urls) {
     return res.status(400).json({ error: 'URL not found, Please check once topics added or not' });
   }
   let analytics = urls.map(url => url.visitHistory).flat();
   const totalClicks = analytics.length;
   const clicksByDate = clickByDateData(analytics);
-  const uniqueClicks = new Set(analytics.map(a => a.IP)).size;
+  const uniqueUsers = new Set(analytics.map(a => a.IP)).size;
   const urlsData  = urls.map((url) => {
     return {
       shortUrl: url.shortUrl,
       totalClicks: url.visitHistory.length,
-      uniqueClicks: new Set(url.visitHistory.map(a => a.IP)).size,
+      uniqueUsers: new Set(url.visitHistory.map(a => a.IP)).size,
     }
   });
 
   return res.json({
     totalClicks,
-    uniqueClicks,
+    uniqueUsers,
     clicksByDate,
     urlsData,
   })
 }
 
 async function getOverallAnalytics(req, res) {
-  const urls = await URL.find({});
+  const userId = req.user?._id;
+  const urls = await URL.find({ userId });
   console.log(' :: ',urls);
   if (!urls) {
     return res.status(400).json({error: "No0 URL found.."});
