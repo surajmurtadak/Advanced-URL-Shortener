@@ -9,11 +9,15 @@ router.get(
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
+  passport.authenticate("google", { failureRedirect: "/failed" }),
   (req, res) => {
     res.redirect("/profile");
   }
 );
+
+router.get('/failed', (req, res) => {
+  res.send('Authentication Failed Please try again. <br> <a href="/auth/google">Login with Google</a>');
+});
 
 router.get("/logout", (req, res) => {
   req.logout(() => {
