@@ -70,7 +70,8 @@ function deviceTypeData(analytics) {
 }
 
 async function getAnalytics(req, res) {
-  const { shortUrl } = req.params;
+  let { shortUrl } = req.params;
+  shortUrl = process.env.BASE_URL + shortUrl;
   const userId = req.user?._id;
   const url = await URL.findOne({ shortUrl, userId });
   if (!url) {
