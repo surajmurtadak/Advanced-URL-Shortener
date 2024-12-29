@@ -4,7 +4,8 @@ const { getUserDetails } = require('../services/urlServices');
 
 async function urlShortenerHandler(req, res) {
   try {
-    const { longUrl, customAlias, topic } = req.body;
+    let { longUrl, customAlias, topic } = req.body;
+    topic = topic?.toLowerCase();
     console.log(req.user?._id);
     if (!longUrl) {
       return res.status(400).json({ error: 'longUrl is required' });
