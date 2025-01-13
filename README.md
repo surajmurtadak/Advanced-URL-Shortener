@@ -4,7 +4,7 @@ The **Advanced URL Shortener API** provides functionality for creating and manag
 
 ## Endpoints
 
-### 1. Create a Short URL
+### Create a Short URL
 **POST** `/api/shorten`
 
 Create a new short URL for sharing long URLs easily.
@@ -26,7 +26,7 @@ Create a new short URL for sharing long URLs easily.
 }
 ```
 
-### 2. Redirect to Original URL
+### Redirect to Original URL
 **GET** `/api/shorten/{alias}`
 
 Redirects to the original URL based on the short URL alias.
@@ -37,7 +37,7 @@ Redirects to the original URL based on the short URL alias.
 #### Response
 - **302 Found**: Redirects to the original long URL.
 
-### 3. Get URL Analytics
+### Get URL Analytics
 **GET** `/api/analytics/{alias}`
 
 Retrieve analytics for a specific short URL.
@@ -62,7 +62,7 @@ Retrieve analytics for a specific short URL.
 }
 ```
 
-### 4. Get Topic-Based Analytics
+### Get Topic-Based Analytics
 **GET** `/api/analytics/topic/{topic}`
 
 Retrieve analytics for all short URLs under a specific topic.
@@ -88,7 +88,7 @@ Retrieve analytics for all short URLs under a specific topic.
 }
 ```
 
-### 5. Get Overall Analytics
+### Get Overall Analytics
 **GET** `/api/analytics/overall`
 
 Retrieve overall analytics for all short URLs created by the authenticated user.
@@ -111,7 +111,7 @@ Retrieve overall analytics for all short URLs created by the authenticated user.
 }
 ```
 
-### 6. Google OAuth Authentication
+### Google OAuth Authentication
 #### Initiate Google OAuth
 **GET** `/auth/google`
 
@@ -139,7 +139,7 @@ Handles the callback from Google OAuth and authenticates the user.
 }
 ```
 
-### 7. Get User Profile
+### Get User Profile
 **GET** `/profile`
 
 Retrieve the profile information of the authenticated user.
